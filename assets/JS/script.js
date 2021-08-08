@@ -1,7 +1,9 @@
 function startUp() {
     //get the current date and current hour (24h format) from Moment
     var todaysDate = moment().format('dddd, MMMM Do');
-    var currentHour = moment().format('HH');
+    //var currentHour = moment().format('HH');
+    var currentHour = '14';
+    console.log(currentHour);
     //display current date in the jumbotron    
     $('#currentDay').text(todaysDate);
 
@@ -30,10 +32,11 @@ function startUp() {
             thisHour = i - 3;
             thisHour = thisHour + 'PM';
         }
+        var thisHour24 = i + 9;
         //create the hour column with text as the calculated time
         var newTime = $('<span>').addClass('col-2 hour').text(thisHour);
-        //creates a task column with an id reflecting the time
-        var newTask = $('<span>').addClass('col-8 description').attr('id', 'task-' + thisHour);
+        //creates a task column with an id reflecting the time (24h format)
+        var newTask = $('<span>').addClass('col-8 textarea').attr('id', 'task-' + thisHour24);
         //creates a save button with an id reflecting the time
         var newSaveButton = $('<button>')
             .addClass('col-2 saveBtn btn btn-block')
@@ -43,6 +46,8 @@ function startUp() {
         newRow.append(newTime, newTask, newSaveButton);
         //post the new row to the document
         $('.container').append(newRow)
+        //set highlights for past, present, future timeblock text areas
+        $('#task-' + currentHour).addClass('present');
     }
 }
 
