@@ -26,7 +26,13 @@ function startUp() {
         var newTime = $('<span>').addClass('col-2 hour').text(thisHour);
         //creates a task column with an id reflecting the time (24h format)
         var newTask = $('<div>').addClass('col-8 time-block').attr('id', 'task-' + thisHour24);
-        var newTaskText = $('<span>').text('Enter a new task').attr('id','task-text-' + thisHour24);
+        //determines if a saved event exists in localStorage or to use default text
+        if (localStorage.getItem(thisHour24)) {
+            var taskValue = localStorage.getItem(thisHour24);
+        } else {
+            taskValue = 'Enter a new task';
+        }
+        var newTaskText = $('<span>').text(taskValue).attr('id','task-text-' + thisHour24);
         newTask.append(newTaskText);
         //creates a save button with an id reflecting the time
         var newSaveButton = $('<button>')
