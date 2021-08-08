@@ -37,7 +37,9 @@ function startUp() {
         //create the hour column with text as the calculated time
         var newTime = $('<span>').addClass('col-2 hour').text(thisHour);
         //creates a task column with an id reflecting the time (24h format)
-        var newTask = $('<span>').addClass('col-8 textarea').attr('id', 'task-' + thisHour24);
+        var newTask = $('<div>').addClass('col-8 time-block').attr('id', 'task-' + thisHour24);
+        var newTaskText = $('<span>').text('Enter a new task');
+        newTask.append(newTaskText);
         //creates a save button with an id reflecting the time
         var newSaveButton = $('<button>')
             .addClass('col-2 saveBtn btn btn-block')
@@ -62,5 +64,25 @@ function startUp() {
         //$('#task-' + currentHour).addClass('present');
     }
 }
+//edit a block's text on click
+$('.container').on('click', '.time-block span', function() {
+    //save previous text
+    var previousText = $(this).text().trim();
+    //replace with an editable text field
+    var newTextInput = $('<textarea>').addClass('form-control').val(previousText);
+    $(this).replaceWith(newTextInput);
+    //adds focus to the new textarea allowing the on blur function to be called
+    //without needing to click inside the new textarea first
+    newTextInput.focus();
+});
+//triggers when a time block's textarea loses focus
+$('.container').on('blur', '.time-block textarea', function() {
+    //retrieve text in textarea
+    var currentText = $(this).val().trim();
+    //changes the area back into a non-editable span and replaces the text with
+    //the new input
+    var newTextArea = $('<span>').text(currentText);
+    $(this).replaceWith(newTextArea);
+})
 
 startUp();
