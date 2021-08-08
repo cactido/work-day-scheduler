@@ -2,7 +2,18 @@ function startUp() {
     //get the current date and current hour (24h format) from Moment
     var todaysDate = moment().format('dddd, MMMM Do');
     var currentHour = moment().format('HH');
-    console.log(currentHour);
+    //checks if today's data matches the last date scheduler was used
+    //and removes scheduled items if not
+    if (localStorage.getItem('schedulerLastUsed') != todaysDate) {
+        localStorage.setItem('schedulerLastUsed', todaysDate);
+        for (i = 9; i < 18; i++) {
+            var retrieve = (i == 9 ? '09' : i)
+            console.log(retrieve);
+            if (localStorage.getItem(retrieve)) {
+                localStorage.removeItem(retrieve);
+            }
+        }
+    }    
     //display current date in the jumbotron    
     $('#currentDay').text(todaysDate);
     //generate new rows for 9AM through 5PM
