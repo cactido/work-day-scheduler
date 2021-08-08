@@ -2,22 +2,10 @@ function startUp() {
     //get the current date and current hour (24h format) from Moment
     var todaysDate = moment().format('dddd, MMMM Do');
     //var currentHour = moment().format('HH');
-    var currentHour = '16';
+    var currentHour = '13';
     console.log(currentHour);
     //display current date in the jumbotron    
     $('#currentDay').text(todaysDate);
-
-    /*
-    var newRow = $('<div>').addClass('row');
-    var newTime = $('<span>').addClass('col-2 hour').text('TIME').attr('id','1');
-    var newTask = $('<span>').addClass('col-8 description present').text('TASK')
-    var newSaveButton = $('<button>').addClass('col-2 saveBtn btn btn-block').html('<img src = "./assets/images/save.png"><br />Save')
-
-    newRow.append(newTime, newTask, newSaveButton);
-
-    $('.container').append(newRow);
-    */
-
     //generate new rows for 9AM through 5PM
     for (let i = 0; i < 9; i++) {
         var newRow = $('<div>').addClass('row');
@@ -38,13 +26,13 @@ function startUp() {
         var newTime = $('<span>').addClass('col-2 hour').text(thisHour);
         //creates a task column with an id reflecting the time (24h format)
         var newTask = $('<div>').addClass('col-8 time-block').attr('id', 'task-' + thisHour24);
-        var newTaskText = $('<span>').text('Enter a new task');
+        var newTaskText = $('<span>').text('Enter a new task').attr('id','task-text-' + thisHour24);
         newTask.append(newTaskText);
         //creates a save button with an id reflecting the time
         var newSaveButton = $('<button>')
             .addClass('col-2 saveBtn btn btn-block')
             .html('<img src = "./assets/images/save.png"><br />Save')
-            .attr('id', 'btn-' + thisHour);
+            .attr('id', 'btn-' + thisHour24);
         //add the new columns and save button to the generated row
         newRow.append(newTime, newTask, newSaveButton);
         //post the new row to the document
@@ -61,15 +49,15 @@ function startUp() {
                 $('#task-' + compareHour).addClass('future');
             }
         }
-        //$('#task-' + currentHour).addClass('present');
     }
 }
 //edit a block's text on click
 $('.container').on('click', '.time-block span', function() {
-    //save previous text
+    //save previous text and id
     var previousText = $(this).text().trim();
+    var currentId = $(this).attr('id');
     //replace with an editable text field
-    var newTextInput = $('<textarea>').addClass('form-control').val(previousText);
+    var newTextInput = $('<textarea>').addClass('form-control').attr('id', currentId).val(previousText);
     $(this).replaceWith(newTextInput);
     //adds focus to the new textarea allowing the on blur function to be called
     //without needing to click inside the new textarea first
@@ -79,10 +67,26 @@ $('.container').on('click', '.time-block span', function() {
 $('.container').on('blur', '.time-block textarea', function() {
     //retrieve text in textarea
     var currentText = $(this).val().trim();
+    var currentId = $(this).attr('id');
     //changes the area back into a non-editable span and replaces the text with
     //the new input
-    var newTextArea = $('<span>').text(currentText);
+    var newTextArea = $('<span>').text(currentText).attr('id', currentId);
     $(this).replaceWith(newTextArea);
 })
+//checks for clicks on save buttons, then saves the corresponding timeblock
+//text to localStorage
+$('.container').on('click', 'button', function() {
+    //get the clicked button's ID and extract the hour from the last two characters
+    var buttonId = $(this).attr('id');
+    buttonId = buttonId.split('');
+    buttonId.splice(0, 4);
+    var selectedHour = buttonId.join('');
+    //retrieves the text of the corresponding field
+    var fieldId = '#task-text-' + selectedHour;
+    var selectedTask = $(fieldId).text().trim();
+    //save the corresponding text to localStorage
+    localStorage.setItem(selectedHour, selectedTask);
+});
+
 
 startUp();
