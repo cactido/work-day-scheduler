@@ -2,7 +2,7 @@ function startUp() {
     //get the current date and current hour (24h format) from Moment
     var todaysDate = moment().format('dddd, MMMM Do');
     //var currentHour = moment().format('HH');
-    var currentHour = '14';
+    var currentHour = '16';
     console.log(currentHour);
     //display current date in the jumbotron    
     $('#currentDay').text(todaysDate);
@@ -32,7 +32,8 @@ function startUp() {
             thisHour = i - 3;
             thisHour = thisHour + 'PM';
         }
-        var thisHour24 = i + 9;
+        //converts time to 24h format for button/textarea labeling
+        var thisHour24 = (i === 0 ? '09' : i + 9);
         //create the hour column with text as the calculated time
         var newTime = $('<span>').addClass('col-2 hour').text(thisHour);
         //creates a task column with an id reflecting the time (24h format)
@@ -47,7 +48,18 @@ function startUp() {
         //post the new row to the document
         $('.container').append(newRow)
         //set highlights for past, present, future timeblock text areas
-        $('#task-' + currentHour).addClass('present');
+        for (let i = 0; i < 9; i++) {
+            var compareHour = (i === 0 ? '09' : i + 9);
+            //checks if each hour is past, present, or future
+            if (currentHour > compareHour) {
+                $('#task-' + compareHour).addClass('past');
+            } else if (currentHour == compareHour) {
+                $('#task-' + compareHour).addClass('present');
+            } else {
+                $('#task-' + compareHour).addClass('future');
+            }
+        }
+        //$('#task-' + currentHour).addClass('present');
     }
 }
 
