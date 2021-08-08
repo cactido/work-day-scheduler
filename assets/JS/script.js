@@ -1,8 +1,7 @@
 function startUp() {
     //get the current date and current hour (24h format) from Moment
     var todaysDate = moment().format('dddd, MMMM Do');
-    //var currentHour = moment().format('HH');
-    var currentHour = '13';
+    var currentHour = moment().format('HH');
     console.log(currentHour);
     //display current date in the jumbotron    
     $('#currentDay').text(todaysDate);
@@ -93,6 +92,5 @@ $('.container').on('click', 'button', function() {
     //save the corresponding text to localStorage
     localStorage.setItem(selectedHour, selectedTask);
 });
-
 
 startUp();
